@@ -157,19 +157,19 @@ plot.eda.amount
 freq_by_sex
 g2
 
-# creating a GLM for frequency by sex
-#freq_glm_sex = glm(nbrtotc ~ sexp, offset = log(expo),family = poisson(link = "log"), data = DB)
-#freq_glm_sex %>% broom::tidy()
-#summary(freq_glm_sex)
-
-# the predicted values are equal to *
-#exp(coef(freq_glm_sex)[1])
-#exp(coef(freq_glm_sex)[1] + coef(freq_glm_sex)[2])
-
-# GLM model comparison
-freq_GLM = glmulti(nbrtotc ~ commune+ageph+sexp+agecar+fuelc+split+usec+expo+offset(lnexpo), family = poisson(link = "log"), confsetsize = 100, crit = aic, data = DB, intercept=FALSE, level=1, plotty=TRUE)
-plot(freq_GLM, type = "p", highlight = c("lnexpo:ins"))
-plot(freq_GLM, type = "w", highlight = c("lnexpo:ins"))
+# GLM model selection (without commune with confsetsize > 2**11)
+freq_GLM = glmulti(nbrtotc ~ lat+long+ageph+agecar+usec+sexp+fuelc+split+expo+offset(lnexpo), family = poisson(link = "log"), confsetsize = 200, crit = bic, data = DB, intercept=FALSE, level=1, plotty=TRUE, report=TRUE, method = "g", deltaB = 0.5, deltaM = 0.5, conseq=7)
+# after completing that the best model is :
+#After 800 generations:
+#Best model: nbrtotc~-1+agecar+fuelc+split+lat+ageph+expo
+#Crit= 126235.04659674
+#Mean crit= 126654.359530203
+#Improvements in best and average IC have bebingo en below the specified goals.
+#Algorithm is declared to have converged.
+#Completed.
+plot(freq_GLM, type = "p")
+plot(freq_GLM, type = "w")
 plot(freq_GLM, type = "s")
+
 
 
